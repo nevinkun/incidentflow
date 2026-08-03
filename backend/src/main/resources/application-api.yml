@@ -1,0 +1,5 @@
+logging:
+  level:
+    com.nevin.incidentflow: INFO
+incidentflow:
+  role: API
