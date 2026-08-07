@@ -11,3 +11,20 @@ spring:
     show-sql: false
   flyway:
     enabled: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+incidentflow:
+  rate-limit:
+    max-requests: 100
+    window-seconds: 60
+  outbox:
+    poll-interval-ms: 5000
+    batch-size: 50
