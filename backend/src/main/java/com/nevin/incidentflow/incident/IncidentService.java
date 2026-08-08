@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -152,5 +153,58 @@ public class IncidentService {
         alert.setIncidentId(incidentId);
         alert.setStatus(Alert.Status.PROCESSED);
         alert.setProcessedAt(OffsetDateTime.now());
+    }
+
+    public List<Incident> listIncidents(Incident.Status status, Incident.Severity severity,
+                                         String service, UUID teamId) {
+        return incidentRepository.findWithFilters(status, severity, service, teamId);
+    }
+
+    public Incident getIncident(UUID incidentId) {
+        return incidentRepository.findById(incidentId)
+                .orElseThrow(() -> new IncidentNotFoundException(incidentId));
+    }
+
+    public List<IncidentTimelineEvent> getTimeline(UUID incidentId) {
+        getIncident(incidentId);
+        return timelineEventRepository.findByIncidentIdOrderByCreatedAtAsc(incidentId);
+    }
+
+    @Transactional
+    public Incident acknowledge(UUID incidentId) {
+        Incident incident = getIncident(incidentId);
+
+        if (incident.getStatus() != Incident.Status.OPEN) {
+            throw new InvalidStatusTransitionException(incident.getStatus(), Incident.Status.ACKNOWLEDGED);
+        }
+
+        incident.setStatus(Incident.Status.ACKNOWLEDGED);
+        incident.setAcknowledgedAt(OffsetDateTime.now());
+
+        timelineEventRepository.save(new IncidentTimelineEvent(
+                incident.getId(), IncidentTimelineEvent.EventType.ACKNOWLEDGED,
+                "Incident acknowledged", null));
+
+        return incident;
+    }
+
+    @Transactional
+    public Incident resolve(UUID incidentId) {
+        Incident incident = getIncident(incidentId);
+
+        if (incident.getStatus() == Incident.Status.RESOLVED) {
+            throw new InvalidStatusTransitionException(incident.getStatus(), Incident.Status.RESOLVED);
+        }
+
+        incident.setStatus(Incident.Status.RESOLVED);
+        incident.setResolvedAt(OffsetDateTime.now());
+
+        timelineEventRepository.save(new IncidentTimelineEvent(
+                incident.getId(), IncidentTimelineEvent.EventType.RESOLVED,
+                "Incident resolved", null));
+
+        correlationCacheService.evict(incident.getFingerprint());
+
+        return incident;
     }
 }
