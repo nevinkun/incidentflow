@@ -28,3 +28,5 @@ incidentflow:
   outbox:
     poll-interval-ms: 5000
     batch-size: 50
+  correlation:
+    window-minutes: 15

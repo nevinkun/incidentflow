@@ -3,3 +3,15 @@ logging:
     com.nevin.incidentflow: INFO
 incidentflow:
   role: WORKER
+spring:
+  kafka:
+    consumer:
+      group-id: incidentflow-worker
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+    listener:
+      ack-mode: manual
+server:
+  port: 8081
