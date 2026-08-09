@@ -32,6 +32,8 @@ public class AlertRequest {
 
     private Map<String, Object> metadata;
 
+    private FailureSimulation failureSimulation = FailureSimulation.NONE;
+
     public String getExternalEventId() { return externalEventId; }
     public void setExternalEventId(String externalEventId) { this.externalEventId = externalEventId; }
 
@@ -58,4 +60,7 @@ public class AlertRequest {
 
     public Map<String, Object> getMetadata() { return metadata; }
     public void setMetadata(Map<String, Object> metadata) { this.metadata = metadata; }
+
+    public FailureSimulation getFailureSimulation() { return failureSimulation; }
+    public void setFailureSimulation(FailureSimulation failureSimulation) { this.failureSimulation = failureSimulation; }
 }

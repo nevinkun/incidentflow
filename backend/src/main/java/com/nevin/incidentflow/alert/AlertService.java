@@ -67,7 +67,7 @@ public class AlertService {
                 "Alert",
                 alert.getId(),
                 fingerprint,
-                buildOutboxPayload(alert));
+                buildOutboxPayload(alert, request.getFailureSimulation()));
 
         outboxEventRepository.save(outboxEvent);
 
@@ -87,7 +87,7 @@ public class AlertService {
         }
     }
 
-    private String buildOutboxPayload(Alert alert) {
+    private String buildOutboxPayload(Alert alert, FailureSimulation failureSimulation) {
         try {
             Map<String, Object> payload = new LinkedHashMap<>();
             payload.put("eventId", UUID.randomUUID().toString());
@@ -102,7 +102,7 @@ public class AlertService {
             payload.put("summary", alert.getSummary());
             payload.put("occurredAt", alert.getOccurredAt().toString());
             payload.put("metadata", jsonMapper.readTree(alert.getMetadata()));
-            payload.put("failureSimulation", "NONE");
+            payload.put("failureSimulation", failureSimulation.name());
 
             return jsonMapper.writeValueAsString(payload);
         } catch (JacksonException e) {

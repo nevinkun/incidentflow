@@ -2,6 +2,9 @@ package com.nevin.incidentflow.incident;
 
 import com.nevin.incidentflow.alert.Alert;
 import com.nevin.incidentflow.alert.AlertRepository;
+import com.nevin.incidentflow.alert.FailureSimulation;
+import com.nevin.incidentflow.failure.PermanentProcessingException;
+import com.nevin.incidentflow.failure.TransientProcessingException;
 import com.nevin.incidentflow.idempotency.ProcessedEvent;
 import com.nevin.incidentflow.idempotency.ProcessedEventRepository;
 import com.nevin.incidentflow.messaging.AlertEventPayload;
@@ -35,6 +38,7 @@ public class IncidentService {
     private final RoutingRuleRepository routingRuleRepository;
     private final CorrelationCacheService correlationCacheService;
     private final Duration correlationWindow;
+    private final int transientFailureAttempts;
 
     public IncidentService(AlertRepository alertRepository,
                             IncidentRepository incidentRepository,
@@ -43,7 +47,8 @@ public class IncidentService {
                             ResponseTeamRepository responseTeamRepository,
                             RoutingRuleRepository routingRuleRepository,
                             CorrelationCacheService correlationCacheService,
-                            @Value("${incidentflow.correlation.window-minutes:15}") long windowMinutes) {
+                            @Value("${incidentflow.correlation.window-minutes:15}") long windowMinutes,
+                            @Value("${incidentflow.failure-simulation.transient-fail-attempts:2}") int transientFailureAttempts) {
         this.alertRepository = alertRepository;
         this.incidentRepository = incidentRepository;
         this.timelineEventRepository = timelineEventRepository;
@@ -52,10 +57,11 @@ public class IncidentService {
         this.routingRuleRepository = routingRuleRepository;
         this.correlationCacheService = correlationCacheService;
         this.correlationWindow = Duration.ofMinutes(windowMinutes);
+        this.transientFailureAttempts = transientFailureAttempts;
     }
 
     @Transactional
-    public void processAlertEvent(AlertEventPayload event) {
+    public void processAlertEvent(AlertEventPayload event, int deliveryAttempt) {
         ProcessedEvent.ProcessedEventId processedEventId =
                 new ProcessedEvent.ProcessedEventId(event.getEventId(), CONSUMER_NAME);
 
@@ -63,6 +69,8 @@ public class IncidentService {
             log.info("Event {} already processed by {}, skipping", event.getEventId(), CONSUMER_NAME);
             return;
         }
+
+        applyFailureSimulation(FailureSimulation.valueOf(event.getFailureSimulation()), deliveryAttempt);
 
         OffsetDateTime occurredAt = OffsetDateTime.parse(event.getOccurredAt());
         Incident.Severity severity = Incident.Severity.valueOf(event.getSeverity());
@@ -145,6 +153,15 @@ public class IncidentService {
         return responseTeamRepository.findByIsDefaultTrue()
                 .orElseThrow(() -> new IllegalStateException(
                         "No routing rule or default team configured for service: " + service));
+    }
+
+    private void applyFailureSimulation(FailureSimulation failureSimulation, int deliveryAttempt) {
+        if (failureSimulation == FailureSimulation.PERMANENT) {
+            throw new PermanentProcessingException("Simulated permanent failure");
+        }
+        if (failureSimulation == FailureSimulation.TRANSIENT && deliveryAttempt <= transientFailureAttempts) {
+            throw new TransientProcessingException("Simulated transient failure on attempt " + deliveryAttempt);
+        }
     }
 
     private void linkAlertToIncident(UUID alertId, UUID incidentId) {

@@ -30,3 +30,5 @@ incidentflow:
     batch-size: 50
   correlation:
     window-minutes: 15
+  failure-simulation:
+    transient-fail-attempts: 2
