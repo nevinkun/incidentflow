@@ -182,6 +182,11 @@ public class IncidentService {
                 .orElseThrow(() -> new IncidentNotFoundException(incidentId));
     }
 
+    public List<Alert> getAttachedAlerts(UUID incidentId) {
+        getIncident(incidentId);
+        return alertRepository.findByIncidentId(incidentId);
+    }
+
     public List<IncidentTimelineEvent> getTimeline(UUID incidentId) {
         getIncident(incidentId);
         return timelineEventRepository.findByIncidentIdOrderByCreatedAtAsc(incidentId);

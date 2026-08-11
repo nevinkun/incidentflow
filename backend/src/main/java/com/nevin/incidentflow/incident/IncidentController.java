@@ -30,6 +30,11 @@ public class IncidentController {
         return ResponseEntity.ok(incidentService.getIncident(incidentId));
     }
 
+    @GetMapping("/{incidentId}/alerts")
+    public ResponseEntity<List<com.nevin.incidentflow.alert.Alert>> getAttachedAlerts(@PathVariable UUID incidentId) {
+        return ResponseEntity.ok(incidentService.getAttachedAlerts(incidentId));
+    }
+
     @GetMapping("/{incidentId}/timeline")
     public ResponseEntity<List<IncidentTimelineEvent>> getTimeline(@PathVariable UUID incidentId) {
         return ResponseEntity.ok(incidentService.getTimeline(incidentId));

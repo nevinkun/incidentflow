@@ -11,6 +11,10 @@ import java.util.List;
 
 public interface IncidentRepository extends JpaRepository<Incident, UUID> {
 
+    long countByStatus(Incident.Status status);
+
+    long countBySeverityAndStatusNot(Incident.Severity severity, Incident.Status excludedStatus);
+
     Optional<Incident> findFirstByFingerprintAndStatusNotAndLastSeenAtAfterOrderByLastSeenAtDesc(
             String fingerprint, Incident.Status excludedStatus, OffsetDateTime cutoff);
 

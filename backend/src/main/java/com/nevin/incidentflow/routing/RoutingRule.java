@@ -49,4 +49,6 @@ public class RoutingRule {
     public ResponseTeam getTeam() { return team; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; }
+
+    public void setTeam(ResponseTeam team) { this.team = team; }
 }
