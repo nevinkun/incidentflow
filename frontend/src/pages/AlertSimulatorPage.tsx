@@ -42,7 +42,7 @@ function AlertStatusTracker({ alertId }: { alertId: string }) {
   return (
     <div className="mt-4 border border-gray-200 rounded-lg p-4">
       <div className="text-sm text-gray-500">Alert Status</div>
-      <div className="text-lg font-semibold">{data?.status ?? 'Loading...'}</div>
+      <div data-testid="alert-status-value" className="text-lg font-semibold">{data?.status ?? 'Loading...'}</div>
     </div>
   )
 }
@@ -86,18 +86,21 @@ function AlertSimulatorPage() {
       <form onSubmit={handleSubmit} className="space-y-3 max-w-md">
         <input
           className="w-full border border-gray-300 rounded px-3 py-2"
+          data-testid="service-input"
           placeholder="Service"
           value={form.service}
           onChange={(e) => setForm({ ...form, service: e.target.value })}
         />
         <input
           className="w-full border border-gray-300 rounded px-3 py-2"
+          data-testid="alert-type-input"
           placeholder="Alert Type"
           value={form.alertType}
           onChange={(e) => setForm({ ...form, alertType: e.target.value })}
         />
         <input
           className="w-full border border-gray-300 rounded px-3 py-2"
+          data-testid="resource-id-input"
           placeholder="Resource ID"
           value={form.resourceId}
           onChange={(e) => setForm({ ...form, resourceId: e.target.value })}
@@ -120,6 +123,7 @@ function AlertSimulatorPage() {
         />
         <select
           className="w-full border border-gray-300 rounded px-3 py-2"
+          data-testid="failure-simulation-select"
           value={form.failureSimulation}
           onChange={(e) => setForm({ ...form, failureSimulation: e.target.value })}
         >
@@ -128,6 +132,7 @@ function AlertSimulatorPage() {
           <option value="PERMANENT">Simulate permanent failure</option>
         </select>
         <button
+          data-testid="submit-alert-button"
           type="submit"
           disabled={mutation.isPending}
           className="bg-black text-white rounded px-4 py-2 disabled:opacity-50"

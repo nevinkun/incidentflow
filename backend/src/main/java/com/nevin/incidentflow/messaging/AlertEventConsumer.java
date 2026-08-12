@@ -14,6 +14,7 @@ import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.RetryTopicHeaders;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.json.JsonMapper;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class AlertEventConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(AlertEventConsumer.class);
+    private static final int MAX_LOCK_RETRIES = 3;
 
     private final JsonMapper jsonMapper;
     private final IncidentService incidentService;
@@ -49,8 +51,25 @@ public class AlertEventConsumer {
         AlertEventPayload event = parsePayload(payload);
         int deliveryAttempt = (attemptsHeader == null) ? 1 : attemptsHeader;
 
-        incidentService.processAlertEvent(event, deliveryAttempt);
+        processWithLockRetry(event, deliveryAttempt);
         acknowledgment.acknowledge();
+    }
+
+    private void processWithLockRetry(AlertEventPayload event, int deliveryAttempt) {
+        int lockAttempts = 0;
+        while (true) {
+            try {
+                incidentService.processAlertEvent(event, deliveryAttempt);
+                return;
+            } catch (ObjectOptimisticLockingFailureException e) {
+                lockAttempts++;
+                if (lockAttempts >= MAX_LOCK_RETRIES) {
+                    throw e;
+                }
+                log.warn("Optimistic lock conflict on event {}, retrying (attempt {}/{})",
+                        event.getEventId(), lockAttempts, MAX_LOCK_RETRIES, e);
+            }
+        }
     }
 
     @DltHandler

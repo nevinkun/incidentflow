@@ -72,7 +72,7 @@ function IncidentsPage() {
               <td className="p-2">{incident.team.name}</td>
               <td className="p-2">{incident.severity}</td>
               <td className="p-2">{incident.status}</td>
-              <td className="p-2">{incident.alertCount}</td>
+              <td data-testid="incident-alert-count" className="p-2">{incident.alertCount}</td>
               <td className="p-2">{new Date(incident.lastSeenAt).toLocaleString()}</td>
             </tr>
           ))}

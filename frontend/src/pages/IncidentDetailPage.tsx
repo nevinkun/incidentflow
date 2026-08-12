@@ -49,6 +49,7 @@ function IncidentDetailPage() {
 
       <div className="flex gap-2 mb-6">
         <button
+          data-testid="acknowledge-button"
           disabled={incident.status !== 'OPEN' || acknowledge.isPending}
           onClick={() => acknowledge.mutate()}
           className="border border-gray-300 rounded px-3 py-1 text-sm disabled:opacity-40"
@@ -56,6 +57,7 @@ function IncidentDetailPage() {
           Acknowledge
         </button>
         <button
+          data-testid="resolve-button"
           disabled={incident.status === 'RESOLVED' || resolve.isPending}
           onClick={() => resolve.mutate()}
           className="border border-gray-300 rounded px-3 py-1 text-sm disabled:opacity-40"
