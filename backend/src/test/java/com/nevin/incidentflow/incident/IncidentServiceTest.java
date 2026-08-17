@@ -11,6 +11,8 @@ import com.nevin.incidentflow.routing.RoutingRule;
 import com.nevin.incidentflow.routing.RoutingRuleRepository;
 import com.nevin.incidentflow.team.ResponseTeam;
 import com.nevin.incidentflow.team.ResponseTeamRepository;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -40,6 +42,8 @@ class IncidentServiceTest {
     @Mock private RoutingRuleRepository routingRuleRepository;
     @Mock private CorrelationCacheService correlationCacheService;
 
+    private final MeterRegistry meterRegistry = new SimpleMeterRegistry();
+
     private IncidentService incidentService;
 
     @BeforeEach
@@ -47,7 +51,7 @@ class IncidentServiceTest {
         incidentService = new IncidentService(
                 alertRepository, incidentRepository, timelineEventRepository,
                 processedEventRepository, responseTeamRepository, routingRuleRepository,
-                correlationCacheService, 15L, 2);
+                correlationCacheService, meterRegistry, 15L, 2);
 
         lenient().when(processedEventRepository.existsById(any())).thenReturn(false);
         lenient().when(correlationCacheService.get(anyString())).thenReturn(Optional.empty());
