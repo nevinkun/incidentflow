@@ -8,10 +8,14 @@ import com.nevin.incidentflow.failure.TransientProcessingException;
 import com.nevin.incidentflow.idempotency.ProcessedEvent;
 import com.nevin.incidentflow.idempotency.ProcessedEventRepository;
 import com.nevin.incidentflow.messaging.AlertEventPayload;
+import com.nevin.incidentflow.observability.CorrelationContext;
 import com.nevin.incidentflow.routing.RoutingRule;
 import com.nevin.incidentflow.routing.RoutingRuleRepository;
 import com.nevin.incidentflow.team.ResponseTeam;
 import com.nevin.incidentflow.team.ResponseTeamRepository;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +44,12 @@ public class IncidentService {
     private final Duration correlationWindow;
     private final int transientFailureAttempts;
 
+    private final MeterRegistry meterRegistry;
+    private final Counter incidentsCreatedCounter;
+    private final Counter alertsCorrelatedCounter;
+    private final Counter processingFailuresCounter;
+    private final Timer processingDurationTimer;
+
     public IncidentService(AlertRepository alertRepository,
                             IncidentRepository incidentRepository,
                             IncidentTimelineEventRepository timelineEventRepository,
@@ -47,6 +57,7 @@ public class IncidentService {
                             ResponseTeamRepository responseTeamRepository,
                             RoutingRuleRepository routingRuleRepository,
                             CorrelationCacheService correlationCacheService,
+                            MeterRegistry meterRegistry,
                             @Value("${incidentflow.correlation.window-minutes:15}") long windowMinutes,
                             @Value("${incidentflow.failure-simulation.transient-fail-attempts:2}") int transientFailureAttempts) {
         this.alertRepository = alertRepository;
@@ -58,36 +69,70 @@ public class IncidentService {
         this.correlationCacheService = correlationCacheService;
         this.correlationWindow = Duration.ofMinutes(windowMinutes);
         this.transientFailureAttempts = transientFailureAttempts;
+
+        this.meterRegistry = meterRegistry;
+        this.incidentsCreatedCounter = Counter.builder("incidentflow.incidentsCreated")
+                .description("Total number of new incidents created")
+                .register(meterRegistry);
+        this.alertsCorrelatedCounter = Counter.builder("incidentflow.alerts.correlated")
+                .description("Total number of alerts correlated into an existing incident")
+                .register(meterRegistry);
+        this.processingFailuresCounter = Counter.builder("incidentflow.processing.failures")
+                .description("Total number of alert event processing attempts that failed")
+                .register(meterRegistry);
+        this.processingDurationTimer = Timer.builder("incidentflow.processing.duration")
+                .description("Time taken to process an alert event into an incident")
+                .register(meterRegistry);
     }
 
     @Transactional
     public void processAlertEvent(AlertEventPayload event, int deliveryAttempt) {
-        ProcessedEvent.ProcessedEventId processedEventId =
-                new ProcessedEvent.ProcessedEventId(event.getEventId(), CONSUMER_NAME);
+        try (CorrelationContext ctx = CorrelationContext.open()
+                .put("eventId", event.getEventId())
+                .put("alertId", event.getAlertId())
+                .put("fingerprint", event.getFingerprint())
+                .put("service", event.getService())) {
 
-        if (processedEventRepository.existsById(processedEventId)) {
-            log.info("Event {} already processed by {}, skipping", event.getEventId(), CONSUMER_NAME);
-            return;
+            ProcessedEvent.ProcessedEventId processedEventId =
+                    new ProcessedEvent.ProcessedEventId(event.getEventId(), CONSUMER_NAME);
+
+            if (processedEventRepository.existsById(processedEventId)) {
+                log.info("Event {} already processed by {}, skipping", event.getEventId(), CONSUMER_NAME);
+                return;
+            }
+
+            Timer.Sample sample = Timer.start(meterRegistry);
+            try {
+                applyFailureSimulation(FailureSimulation.valueOf(event.getFailureSimulation()), deliveryAttempt);
+
+                OffsetDateTime occurredAt = OffsetDateTime.parse(event.getOccurredAt());
+                Incident.Severity severity = Incident.Severity.valueOf(event.getSeverity());
+
+                Optional<Incident> existing = findActiveIncident(event.getFingerprint());
+
+                Incident incident;
+                if (existing.isPresent()) {
+                    incident = attachAlert(existing.get(), occurredAt, severity, event.getAlertId());
+                    alertsCorrelatedCounter.increment();
+                } else {
+                    incident = createIncident(event.getFingerprint(), event.getService(), event.getAlertType(),
+                            severity, occurredAt);
+                    incidentsCreatedCounter.increment();
+                }
+
+                ctx.put("incidentId", incident.getId());
+                log.info("Alert {} processed into incident {}", event.getAlertId(), incident.getId());
+
+                correlationCacheService.put(event.getFingerprint(), incident.getId());
+                linkAlertToIncident(event.getAlertId(), incident.getId());
+                processedEventRepository.save(new ProcessedEvent(event.getEventId(), CONSUMER_NAME));
+            } catch (RuntimeException e) {
+                processingFailuresCounter.increment();
+                throw e;
+            } finally {
+                sample.stop(processingDurationTimer);
+            }
         }
-
-        applyFailureSimulation(FailureSimulation.valueOf(event.getFailureSimulation()), deliveryAttempt);
-
-        OffsetDateTime occurredAt = OffsetDateTime.parse(event.getOccurredAt());
-        Incident.Severity severity = Incident.Severity.valueOf(event.getSeverity());
-
-        Optional<Incident> existing = findActiveIncident(event.getFingerprint());
-
-        Incident incident;
-        if (existing.isPresent()) {
-            incident = attachAlert(existing.get(), occurredAt, severity, event.getAlertId());
-        } else {
-            incident = createIncident(event.getFingerprint(), event.getService(), event.getAlertType(),
-                    severity, occurredAt);
-        }
-
-        correlationCacheService.put(event.getFingerprint(), incident.getId());
-        linkAlertToIncident(event.getAlertId(), incident.getId());
-        processedEventRepository.save(new ProcessedEvent(event.getEventId(), CONSUMER_NAME));
     }
 
     private Optional<Incident> findActiveIncident(String fingerprint) {

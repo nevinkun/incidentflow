@@ -4,6 +4,8 @@ import com.nevin.incidentflow.alert.FailureSimulation;
 import com.nevin.incidentflow.messaging.AlertEventPayload;
 import com.nevin.incidentflow.outbox.OutboxEvent;
 import com.nevin.incidentflow.outbox.OutboxEventRepository;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.core.JacksonException;
@@ -20,12 +22,19 @@ public class FailureService {
     private final OutboxEventRepository outboxEventRepository;
     private final JsonMapper jsonMapper;
 
+    private final Counter replaysCounter;
+
     public FailureService(FailureRecordRepository failureRecordRepository,
                            OutboxEventRepository outboxEventRepository,
-                           JsonMapper jsonMapper) {
+                           JsonMapper jsonMapper,
+                           MeterRegistry meterRegistry) {
         this.failureRecordRepository = failureRecordRepository;
         this.outboxEventRepository = outboxEventRepository;
         this.jsonMapper = jsonMapper;
+
+        this.replaysCounter = Counter.builder("incidentflow.replays")
+                .description("Total number of failed events replayed")
+                .register(meterRegistry);
     }
 
     public List<FailureRecord> listFailures() {
@@ -65,6 +74,8 @@ public class FailureService {
 
         failureRecord.setReplayedAt(OffsetDateTime.now());
         failureRecord.setReplayEventId(newEventId);
+
+        replaysCounter.increment();
 
         return failureRecord;
     }

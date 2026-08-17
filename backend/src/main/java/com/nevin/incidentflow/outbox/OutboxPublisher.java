@@ -1,6 +1,8 @@
 package com.nevin.incidentflow.outbox;
 
 import com.nevin.incidentflow.messaging.KafkaTopicConfig;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,10 +28,16 @@ public class OutboxPublisher {
 
     public OutboxPublisher(OutboxEventRepository outboxEventRepository,
                             KafkaTemplate<String, String> kafkaTemplate,
+                            MeterRegistry meterRegistry,
                             @Value("${incidentflow.outbox.batch-size:50}") int batchSize) {
         this.outboxEventRepository = outboxEventRepository;
         this.kafkaTemplate = kafkaTemplate;
         this.batchSize = batchSize;
+
+        Gauge.builder("incidentflow.outbox.pending", outboxEventRepository,
+                        repo -> repo.countByPublishedAtIsNull())
+                .description("Number of outbox events not yet published to Kafka")
+                .register(meterRegistry);
     }
 
     @Scheduled(fixedDelayString = "${incidentflow.outbox.poll-interval-ms:5000}")

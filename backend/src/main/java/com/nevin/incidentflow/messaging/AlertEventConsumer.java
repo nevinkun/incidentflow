@@ -4,6 +4,9 @@ import com.nevin.incidentflow.failure.FailureRecord;
 import com.nevin.incidentflow.failure.FailureRecordRepository;
 import com.nevin.incidentflow.failure.PermanentProcessingException;
 import com.nevin.incidentflow.incident.IncidentService;
+import com.nevin.incidentflow.observability.CorrelationContext;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -32,11 +35,18 @@ public class AlertEventConsumer {
     private final IncidentService incidentService;
     private final FailureRecordRepository failureRecordRepository;
 
+    private final Counter dlqMessagesCounter;
+
     public AlertEventConsumer(JsonMapper jsonMapper, IncidentService incidentService,
-                               FailureRecordRepository failureRecordRepository) {
+                               FailureRecordRepository failureRecordRepository,
+                               MeterRegistry meterRegistry) {
         this.jsonMapper = jsonMapper;
         this.incidentService = incidentService;
         this.failureRecordRepository = failureRecordRepository;
+
+        this.dlqMessagesCounter = Counter.builder("incidentflow.dlq.messages")
+                .description("Total number of events that reached the dead-letter topic")
+                .register(meterRegistry);
     }
 
     @RetryableTopic(
@@ -80,17 +90,27 @@ public class AlertEventConsumer {
                               @Header("kafka_exception-fqcn") String exceptionType,
                               @Header("kafka_exception-message") String errorMessage,
                               @Header(name = RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS, required = false) Integer attemptsHeader) {
-        UUID originalEventId = extractEventId(payload);
-        int retryCount = (attemptsHeader == null) ? 0 : attemptsHeader;
+        AlertEventPayload parsed = tryParsePayload(payload);
+        UUID originalEventId = (parsed != null) ? parsed.getEventId() : UUID.randomUUID();
 
-        log.warn("Dead-lettering event {} from {} after {} attempts: {}",
-                originalEventId, originalTopic, retryCount, errorMessage);
+        try (CorrelationContext ctx = CorrelationContext.open()
+                .put("eventId", originalEventId)
+                .put("alertId", parsed != null ? parsed.getAlertId() : null)
+                .put("fingerprint", parsed != null ? parsed.getFingerprint() : null)
+                .put("service", parsed != null ? parsed.getService() : null)) {
 
-        FailureRecord record = new FailureRecord(
-                originalEventId, originalTopic, originalPartition, originalOffset,
-                payload, exceptionType, errorMessage, retryCount);
+            int retryCount = (attemptsHeader == null) ? 0 : attemptsHeader;
 
-        failureRecordRepository.save(record);
+            log.warn("Dead-lettering event {} from {} after {} attempts: {}",
+                    originalEventId, originalTopic, retryCount, errorMessage);
+
+            FailureRecord record = new FailureRecord(
+                    originalEventId, originalTopic, originalPartition, originalOffset,
+                    payload, exceptionType, errorMessage, retryCount);
+
+            failureRecordRepository.save(record);
+            dlqMessagesCounter.increment();
+        }
     }
 
     private AlertEventPayload parsePayload(String payload) {
@@ -101,11 +121,11 @@ public class AlertEventConsumer {
         }
     }
 
-    private UUID extractEventId(String payload) {
+    private AlertEventPayload tryParsePayload(String payload) {
         try {
-            return jsonMapper.readValue(payload, AlertEventPayload.class).getEventId();
+            return jsonMapper.readValue(payload, AlertEventPayload.class);
         } catch (JacksonException e) {
-            return UUID.randomUUID();
+            return null;
         }
     }
 }

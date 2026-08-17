@@ -1,5 +1,7 @@
 package com.nevin.incidentflow.incident;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,17 +22,33 @@ public class CorrelationCacheService {
     private final StringRedisTemplate redisTemplate;
     private final Duration ttl;
 
+    private final Counter cacheHitsCounter;
+    private final Counter cacheMissesCounter;
+
     public CorrelationCacheService(
             StringRedisTemplate redisTemplate,
+            MeterRegistry meterRegistry,
             @Value("${incidentflow.correlation.window-minutes:15}") long windowMinutes) {
         this.redisTemplate = redisTemplate;
         this.ttl = Duration.ofMinutes(windowMinutes);
+
+        this.cacheHitsCounter = Counter.builder("incidentflow.correlation.cache.hits")
+                .description("Total number of correlation cache lookups that found a value in Redis")
+                .register(meterRegistry);
+        this.cacheMissesCounter = Counter.builder("incidentflow.correlation.cache.misses")
+                .description("Total number of correlation cache lookups that found no value in Redis")
+                .register(meterRegistry);
     }
 
     public Optional<UUID> get(String fingerprint) {
         try {
             String value = redisTemplate.opsForValue().get(KEY_PREFIX + fingerprint);
-            return value == null ? Optional.empty() : Optional.of(UUID.fromString(value));
+            if (value == null) {
+                cacheMissesCounter.increment();
+                return Optional.empty();
+            }
+            cacheHitsCounter.increment();
+            return Optional.of(UUID.fromString(value));
         } catch (DataAccessException e) {
             log.warn("Correlation cache read failed for fingerprint={}, falling back to database", fingerprint, e);
             return Optional.empty();
