@@ -1,0 +1,25 @@
+services:
+  incidentflow-api:
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-1
+        awslogs-group: /incidentflow/api
+        awslogs-create-group: "true"
+        awslogs-stream: api
+  incidentflow-worker:
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-1
+        awslogs-group: /incidentflow/worker
+        awslogs-create-group: "true"
+        awslogs-stream: worker
+  nginx:
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-1
+        awslogs-group: /incidentflow/nginx
+        awslogs-create-group: "true"
+        awslogs-stream: nginx
