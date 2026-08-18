@@ -3,18 +3,33 @@
   "uid": "incidentflow-main",
   "timezone": "browser",
   "refresh": "10s",
-  "time": { "from": "now-1h", "to": "now" },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
   "panels": [
     {
       "id": 1,
       "title": "Alert Ingestion Rate",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "targets": [
         {
           "expr": "rate(incidentflow_alerts_ingested_total{job=\"incidentflow-api\"}[5m])",
-          "legendFormat": "alerts/sec"
+          "legendFormat": "alerts/sec",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     },
@@ -22,12 +37,24 @@
       "id": 2,
       "title": "Incidents Created",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "targets": [
         {
           "expr": "rate(incidentflow_incidentsCreated_total{job=\"incidentflow-worker\"}[5m])",
-          "legendFormat": "incidents/sec"
+          "legendFormat": "incidents/sec",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     },
@@ -35,12 +62,24 @@
       "id": 3,
       "title": "Alerts Correlated",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "targets": [
         {
           "expr": "rate(incidentflow_alerts_correlated_total{job=\"incidentflow-worker\"}[5m])",
-          "legendFormat": "correlations/sec"
+          "legendFormat": "correlations/sec",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     },
@@ -48,13 +87,30 @@
       "id": 4,
       "title": "Processing Latency (avg)",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
       "targets": [
         {
           "expr": "rate(incidentflow_processing_duration_seconds_sum{job=\"incidentflow-worker\"}[5m]) / rate(incidentflow_processing_duration_seconds_count{job=\"incidentflow-worker\"}[5m])",
-          "legendFormat": "avg duration"
+          "legendFormat": "avg duration",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     },
@@ -62,12 +118,24 @@
       "id": 5,
       "title": "Processing Failures",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 16, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "targets": [
         {
           "expr": "rate(incidentflow_processing_failures_total{job=\"incidentflow-worker\"}[5m])",
-          "legendFormat": "failures/sec"
+          "legendFormat": "failures/sec",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     },
@@ -75,12 +143,24 @@
       "id": 6,
       "title": "Dead-Letter Events",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 16, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "targets": [
         {
           "expr": "rate(incidentflow_dlq_messages_total{job=\"incidentflow-worker\"}[5m])",
-          "legendFormat": "dlq/sec"
+          "legendFormat": "dlq/sec",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     },
@@ -88,12 +168,24 @@
       "id": 7,
       "title": "Pending Outbox Events",
       "type": "stat",
-      "gridPos": { "x": 0, "y": 24, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
       "targets": [
         {
           "expr": "incidentflow_outbox_pending{job=\"incidentflow-api\"}",
-          "legendFormat": "pending"
+          "legendFormat": "pending",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     },
@@ -101,13 +193,32 @@
       "id": 8,
       "title": "Redis Cache Hit Rate",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 24, "w": 12, "h": 8 },
-      "datasource": { "type": "prometheus", "uid": "prometheus" },
-      "fieldConfig": { "defaults": { "unit": "percentunit", "max": 1, "min": 0 }, "overrides": [] },
+      "gridPos": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "max": 1,
+          "min": 0
+        },
+        "overrides": []
+      },
       "targets": [
         {
           "expr": "rate(incidentflow_correlation_cache_hits_total{job=\"incidentflow-worker\"}[5m]) / (rate(incidentflow_correlation_cache_hits_total{job=\"incidentflow-worker\"}[5m]) + rate(incidentflow_correlation_cache_misses_total{job=\"incidentflow-worker\"}[5m]))",
-          "legendFormat": "hit rate"
+          "legendFormat": "hit rate",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ]
     }
