@@ -7,6 +7,7 @@ import com.nevin.incidentflow.ratelimit.RateLimitExceededException;
 import com.nevin.incidentflow.ratelimit.RateLimiter;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.core.JacksonException;
@@ -28,16 +29,19 @@ public class AlertService {
     private final Counter alertsIngestedCounter;
     private final Counter alertsRateLimitedCounter;
     private final Counter duplicateAlertsCounter;
+    private final boolean failureSimulationEnabled;
 
     public AlertService(AlertRepository alertRepository,
                          OutboxEventRepository outboxEventRepository,
                          RateLimiter rateLimiter,
                          JsonMapper jsonMapper,
-                         MeterRegistry meterRegistry) {
+                         MeterRegistry meterRegistry,
+                         @Value("${incidentflow.failure-simulation.enabled:true}") boolean failureSimulationEnabled) {
         this.alertRepository = alertRepository;
         this.outboxEventRepository = outboxEventRepository;
         this.rateLimiter = rateLimiter;
         this.jsonMapper = jsonMapper;
+        this.failureSimulationEnabled = failureSimulationEnabled;
 
         this.alertsIngestedCounter = Counter.builder("incidentflow.alerts.ingested")
                 .description("Total number of alerts successfully ingested")
@@ -90,12 +94,16 @@ public class AlertService {
             UUID eventId = UUID.randomUUID();
             ctx.put("eventId", eventId);
 
+            FailureSimulation failureSimulation = failureSimulationEnabled
+                    ? request.getFailureSimulation()
+                    : FailureSimulation.NONE;
+
             OutboxEvent outboxEvent = new OutboxEvent(
                     "ALERT_RECEIVED",
                     "Alert",
                     alert.getId(),
                     fingerprint,
-                    buildOutboxPayload(alert, eventId, request.getFailureSimulation()));
+                    buildOutboxPayload(alert, eventId, failureSimulation));
 
             outboxEventRepository.save(outboxEvent);
 
