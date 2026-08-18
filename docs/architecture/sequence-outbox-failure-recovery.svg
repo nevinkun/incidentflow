@@ -1,0 +1,104 @@
+<svg viewBox="0 0 1300 1483" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="1300" height="1483" fill="#FFFFFF"/>
+<defs>
+<marker id="arr_call" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arr_return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+</defs>
+<text x="650.0" y="34" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A" text-anchor="middle">IncidentFlow &#8212; Outbox Failure &amp; Recovery</text>
+<text x="650.0" y="56" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#64748B" text-anchor="middle">At-least-once publishing: the publisher may resend after a crash &#8212; idempotent consumption absorbs the duplicate</text>
+<line x1="150.0" y1="146" x2="150.0" y2="1413" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="483.3333333333333" y1="146" x2="483.3333333333333" y2="1413" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="816.6666666666666" y1="146" x2="816.6666666666666" y2="1413" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="1150.0" y1="146" x2="1150.0" y2="1413" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<rect x="80" y="186" width="1140" height="26" fill="#F1F5F9"/>
+<line x1="80" y1="186" x2="1220" y2="186" stroke="#475569" stroke-width="1.2"/>
+<line x1="80" y1="212" x2="1220" y2="212" stroke="#475569" stroke-width="1.2"/>
+<text x="650.0" y="204" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">first publish attempt</text>
+<path d="M150.0,226 L483.3333333333333,226" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="172.17916666666662" y="208.5" width="288.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="316.66666666666663" y="219" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">SELECT unpublished &#8230; FOR UPDATE SKIP LOCKED</text>
+<path d="M483.3333333333333,270 L150.0,270" fill="none" stroke="#1E40AF" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="218.3791666666666" y="252.5" width="196.57500000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="316.66666666666663" y="263" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#1E40AF" text-anchor="middle">OutboxEvent(id=42, fingerprint=X)</text>
+<path d="M150.0,314 L816.6666666666666,314" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="405.2583333333333" y="296.5" width="156.15" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="483.3333333333333" y="307" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">publish(eventId=42, key=X)</text>
+<path d="M816.6666666666666,358 L150.0,358" fill="none" stroke="#334155" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="361.9458333333333" y="340.5" width="242.775" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="483.3333333333333" y="351" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">broker ack &#8212; message durably stored</text>
+<rect x="10" y="402" width="330.4" height="63" rx="6" fill="#FEE2E2" stroke="#B91C1C" stroke-width="1.6" stroke-dasharray="5,3"/>
+<text x="175.2" y="420" font-family="Helvetica, Arial, sans-serif" font-size="10.2" font-weight="700" font-style="normal" fill="#991B1B" text-anchor="middle">&#9889; process crashes here</text>
+<text x="175.2" y="435" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#991B1B" text-anchor="middle">UPDATE OutboxEvent SET publishedAt never ran</text>
+<text x="175.2" y="450" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#991B1B" text-anchor="middle">row 42 still shows unpublished</text>
+<rect x="80" y="487" width="1140" height="26" fill="#F1F5F9"/>
+<line x1="80" y1="487" x2="1220" y2="487" stroke="#475569" stroke-width="1.2"/>
+<line x1="80" y1="513" x2="1220" y2="513" stroke="#475569" stroke-width="1.2"/>
+<text x="650.0" y="505" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">publisher restarts &#8212; next scheduled poll</text>
+<path d="M150.0,527 L483.3333333333333,527" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="172.17916666666662" y="509.5" width="288.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="316.66666666666663" y="520" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">SELECT unpublished &#8230; FOR UPDATE SKIP LOCKED</text>
+<rect x="60.0" y="571" width="513.3333333333333" height="33" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="316.66666666666663" y="589" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">row 42 is picked up again &#8212; the earlier UPDATE never committed</text>
+<path d="M483.3333333333333,628 L150.0,628" fill="none" stroke="#1E40AF" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="177.95416666666662" y="610.5" width="277.425" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="316.66666666666663" y="621" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#1E40AF" text-anchor="middle">OutboxEvent(id=42, fingerprint=X) &#8212; again</text>
+<path d="M150.0,672 L816.6666666666666,672" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="330.1833333333333" y="654.5" width="306.3" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="483.3333333333333" y="665" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">publish(eventId=42, key=X) &#8212; duplicate message</text>
+<path d="M816.6666666666666,716 L150.0,716" fill="none" stroke="#334155" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="451.4583333333333" y="698.5" width="63.75000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="483.3333333333333" y="709" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">broker ack</text>
+<path d="M150.0,760 L483.3333333333333,760" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="137.5291666666666" y="742.5" width="358.27500000000003" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="316.66666666666663" y="753" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">UPDATE OutboxEvent SET publishedAt &#8212; succeeds this time</text>
+<rect x="80" y="810" width="1140" height="26" fill="#F1F5F9"/>
+<line x1="80" y1="810" x2="1220" y2="810" stroke="#475569" stroke-width="1.2"/>
+<line x1="80" y1="836" x2="1220" y2="836" stroke="#475569" stroke-width="1.2"/>
+<text x="650.0" y="828" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">incidentflow-worker sees both copies of eventId=42</text>
+<path d="M816.6666666666666,850 L1150.0,850" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="896.5958333333333" y="832.5" width="173.47500000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="983.3333333333333" y="843" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">deliver eventId=42 (1st copy)</text>
+<path d="M1150.0,894 L483.3333333333333,894" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="715.4916666666666" y="876.5" width="202.35000000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="816.6666666666666" y="887" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">ProcessedEvent(eventId=42) exists?</text>
+<path d="M483.3333333333333,938 L1150.0,938" fill="none" stroke="#1E40AF" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="738.5916666666666" y="920.5" width="156.15" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="816.6666666666666" y="931" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#1E40AF" text-anchor="middle">not found &#8212; continue</text>
+<path d="M1150.0,982 C 1104.0,978 1104.0,1004 1150.0,1000" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<text x="1096.0" y="990" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="end">apply side effects normally</text>
+<text x="1096.0" y="1004" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="normal" font-style="italic" fill="#94A3B8" text-anchor="end">create/update incident, timeline, correlation cache</text>
+<path d="M1150.0,1042 L483.3333333333333,1042" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="663.5166666666667" y="1024.5" width="306.3" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="816.6666666666666" y="1035" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">INSERT ProcessedEvent(eventId=42) &#8212; last write</text>
+<path d="M1150.0,1086 L816.6666666666666,1086" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="942.7958333333332" y="1068.5" width="81.075" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="983.3333333333333" y="1079" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">commit offset</text>
+<path d="M816.6666666666666,1130 L1150.0,1130" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="864.8333333333333" y="1112.5" width="237.00000000000003" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="983.3333333333333" y="1123" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">deliver eventId=42 (2nd copy, duplicate)</text>
+<path d="M1150.0,1174 L483.3333333333333,1174" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="715.4916666666666" y="1156.5" width="202.35000000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="816.6666666666666" y="1167" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">ProcessedEvent(eventId=42) exists?</text>
+<path d="M483.3333333333333,1218 L1150.0,1218" fill="none" stroke="#1E40AF" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="724.1541666666666" y="1200.5" width="185.025" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="816.6666666666666" y="1211" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#1E40AF" text-anchor="middle">found &#8212; already processed</text>
+<rect x="393.3333333333333" y="1262" width="846.6666666666667" height="63" rx="6" fill="#DBEAFE" stroke="#1E40AF" stroke-width="1.3"/>
+<text x="816.6666666666666" y="1280" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="middle">idempotent consumer &#8212; checked before doing any work, so the duplicate is skipped, not caught</text>
+<text x="816.6666666666666" y="1295" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="middle">no second incident, no double-counted alert, no duplicate timeline entry</text>
+<text x="816.6666666666666" y="1310" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="middle">the (eventId, consumerName) unique constraint is a backstop for a genuine race, not the normal path</text>
+<path d="M1150.0,1349 L816.6666666666666,1349" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="801.3083333333333" y="1331.5" width="364.05" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="983.3333333333333" y="1342" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">commit offset &#8212; safe to ack, event was already processed</text>
+<rect x="55.0" y="100" width="190" height="46" rx="8" fill="#CCFBF1" stroke="#0F766E" stroke-width="1.8"/>
+<text x="150.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#0F766E" text-anchor="middle">Outbox Publisher</text>
+<text x="150.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#0F766E" text-anchor="middle">scheduled job in incidentflow-api</text>
+<rect x="388.3333333333333" y="100" width="190" height="46" rx="8" fill="#DBEAFE" stroke="#1E40AF" stroke-width="1.8"/>
+<text x="483.3333333333333" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1E40AF" text-anchor="middle">PostgreSQL</text>
+<text x="483.3333333333333" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#1E40AF" text-anchor="middle">source of truth</text>
+<rect x="721.6666666666666" y="100" width="190" height="46" rx="8" fill="#E2E8F0" stroke="#334155" stroke-width="1.8"/>
+<text x="816.6666666666666" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#334155" text-anchor="middle">Kafka</text>
+<text x="816.6666666666666" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#334155" text-anchor="middle">KRaft mode</text>
+<rect x="1055.0" y="100" width="190" height="46" rx="8" fill="#E0E7FF" stroke="#4338CA" stroke-width="1.8"/>
+<text x="1150.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#4338CA" text-anchor="middle">incidentflow-worker</text>
+<text x="1150.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#4338CA" text-anchor="middle">profile=worker</text>
+</svg>

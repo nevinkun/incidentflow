@@ -1,0 +1,121 @@
+<svg viewBox="0 0 1600 1230" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="1600" height="1230" fill="#FFFFFF"/>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+</marker>
+<marker id="arrowlight" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M0,0 L10,5 L0,10 z" fill="#94A3B8"/>
+</marker>
+</defs>
+<text x="800.0" y="42" font-family="Helvetica, Arial, sans-serif" font-size="27" font-weight="700" font-style="normal" fill="#0F172A" text-anchor="middle">IncidentFlow &#8212; System Architecture</text>
+<text x="800.0" y="65" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="normal" font-style="normal" fill="#64748B" text-anchor="middle">One Spring Boot codebase, two profiles (api / worker) &#183; single EC2 host via Docker Compose</text>
+<text x="1490" y="96" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#475569" text-anchor="start">&#8212;&#8212; data flow</text>
+<line x1="1480" y1="112" x2="1520" y2="112" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="4,4"/>
+<text x="1526" y="116" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#94A3B8" text-anchor="start">logs / metrics</text>
+<rect x="610" y="88" width="380" height="58" rx="9" fill="#F1F5F9" stroke="#64748B" stroke-width="1.8"/>
+<text x="800" y="112" font-family="Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" font-style="normal" fill="#334155" text-anchor="middle">Browser &#8212; React Operator Console</text>
+<text x="800" y="131" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#64748B" text-anchor="middle">TanStack Query polling every 2&#8211;5s</text>
+<path d="M800,146 C800,172 730,178 660,216" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="825" y="156" width="50.800000000000004" height="14" fill="#FFFFFF" opacity="0.92"/>
+<text x="828" y="166" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" font-style="normal" fill="#475569" text-anchor="start">HTTP :80</text>
+<rect x="40" y="180" width="1330" height="870" rx="16" fill="none" stroke="#94A3B8" stroke-width="2" stroke-dasharray="7,6"/>
+<text x="64" y="205" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="normal" font-style="italic" fill="#64748B" text-anchor="start">AWS EC2 instance (t4g.medium, Amazon Linux 2023) &#8212; Docker Compose network</text>
+<rect x="520" y="218" width="280" height="80" rx="9" fill="#FEF3C7" stroke="#B45309" stroke-width="1.8"/>
+<text x="660" y="240" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" font-style="normal" fill="#92400E" text-anchor="middle">nginx &#8212; edge</text>
+<text x="660" y="257" font-family="Helvetica, Arial, sans-serif" font-size="9.6" font-weight="normal" font-style="italic" fill="#92400E" text-anchor="middle">reverse proxy only, no static files</text>
+<text x="660" y="273" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" font-style="normal" fill="#92400E" text-anchor="middle">/ &#8594; web &#183; /api/* &#8594; api</text>
+<text x="660" y="288" font-family="Helvetica, Arial, sans-serif" font-size="9.4" font-weight="normal" font-style="normal" fill="#92400E" text-anchor="middle">public :80 &#8212; only entry point</text>
+<rect x="850" y="218" width="280" height="80" rx="9" fill="#FEF3C7" stroke="#B45309" stroke-width="1.8"/>
+<text x="990" y="240" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" font-style="normal" fill="#92400E" text-anchor="middle">incidentflow-web</text>
+<text x="990" y="257" font-family="Helvetica, Arial, sans-serif" font-size="9.6" font-weight="normal" font-style="italic" fill="#92400E" text-anchor="middle">(nginx:alpine + built React SPA)</text>
+<text x="990" y="273" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" font-style="normal" fill="#92400E" text-anchor="middle">serves Vite build &#183; SPA fallback</text>
+<text x="990" y="288" font-family="Helvetica, Arial, sans-serif" font-size="9.4" font-weight="normal" font-style="normal" fill="#92400E" text-anchor="middle">:80 &#8212; internal only</text>
+<path d="M800,258 L850,258" fill="none" stroke="#B45309" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="819.48" y="239" width="11.040000000000001" height="13" fill="#FFFFFF" opacity="0.92"/>
+<text x="825" y="248" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="normal" font-style="normal" fill="#475569" text-anchor="middle">/</text>
+<path d="M650,298 C580,330 480,340 420,378" fill="none" stroke="#475569" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="535.2" y="312" width="39.6" height="14" fill="#FFFFFF" opacity="0.92"/>
+<text x="555" y="322" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" font-style="normal" fill="#475569" text-anchor="middle">/api/*</text>
+<rect x="170" y="382" width="480" height="208" rx="11" fill="#CCFBF1" stroke="#0F766E" stroke-width="1.8"/>
+<text x="410" y="410" font-family="Helvetica, Arial, sans-serif" font-size="15.5" font-weight="700" font-style="normal" fill="#0F766E" text-anchor="middle">incidentflow-api</text>
+<text x="410" y="427" font-family="Helvetica, Arial, sans-serif" font-size="10.8" font-weight="normal" font-style="italic" fill="#0F766E" text-anchor="middle">(Spring Boot 4.1 &#183; profile=api)</text>
+<text x="200" y="452.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#134E4A" text-anchor="start">&#8226; rate-limit check (Redis) &#8212; runs first</text>
+<text x="200" y="470.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#134E4A" text-anchor="start">&#8226; dedupe check, then fingerprint (SHA-256)</text>
+<text x="200" y="489.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#134E4A" text-anchor="start">&#8226; Alert + OutboxEvent insert, 1 txn</text>
+<text x="200" y="507.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#134E4A" text-anchor="start">&#8226; outbox publisher &#8594; Kafka, key = fingerprint</text>
+<text x="200" y="526.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#134E4A" text-anchor="start">&#8226; REST: alerts / incidents / teams / failures</text>
+<text x="200" y="544.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#134E4A" text-anchor="start">&#8226; :8080 &#8212; internal only</text>
+<rect x="780" y="382" width="480" height="208" rx="11" fill="#E0E7FF" stroke="#4338CA" stroke-width="1.8"/>
+<text x="1020" y="410" font-family="Helvetica, Arial, sans-serif" font-size="15.5" font-weight="700" font-style="normal" fill="#4338CA" text-anchor="middle">incidentflow-worker</text>
+<text x="1020" y="427" font-family="Helvetica, Arial, sans-serif" font-size="10.8" font-weight="normal" font-style="italic" fill="#4338CA" text-anchor="middle">(Spring Boot 4.1 &#183; profile=worker)</text>
+<text x="810" y="452.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#312E81" text-anchor="start">&#8226; consume incidentflow.alerts.received</text>
+<text x="810" y="470.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#312E81" text-anchor="start">&#8226; idempotency: check first, skip if already processed</text>
+<text x="810" y="489.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#312E81" text-anchor="start">&#8226; correlate: Redis lookup &#8594; Postgres fallback</text>
+<text x="810" y="507.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#312E81" text-anchor="start">&#8226; route team, escalate severity, write timeline</text>
+<text x="810" y="526.0" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#312E81" text-anchor="start">&#8226; retry w/ backoff, exclude permanent &#8594; DLT</text>
+<text x="810" y="544.5" font-family="Helvetica, Arial, sans-serif" font-size="11.5" font-weight="normal" font-style="normal" fill="#312E81" text-anchor="start">&#8226; :8081 &#8212; internal only</text>
+<rect x="170" y="700" width="380" height="160" rx="11" fill="#DBEAFE" stroke="#1E40AF" stroke-width="1.8"/>
+<text x="360" y="728" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" font-style="normal" fill="#1E3A8A" text-anchor="middle">PostgreSQL &#8212; source of truth</text>
+<text x="190" y="753.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="start">&#8226; Alert, OutboxEvent</text>
+<text x="190" y="771.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="start">&#8226; Incident, IncidentTimelineEvent</text>
+<text x="190" y="790.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="start">&#8226; ProcessedEvent, FailureRecord</text>
+<text x="190" y="808.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="start">&#8226; ResponseTeam, RoutingRule</text>
+<text x="190" y="827.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E3A8A" text-anchor="start">&#8226; schema managed by Flyway</text>
+<rect x="610" y="700" width="290" height="160" rx="11" fill="#E2E8F0" stroke="#334155" stroke-width="1.8"/>
+<text x="755" y="728" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" font-style="normal" fill="#1E293B" text-anchor="middle">Kafka (KRaft mode)</text>
+<text x="628" y="753.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E293B" text-anchor="start">&#8226; incidentflow.alerts.received</text>
+<text x="628" y="771.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E293B" text-anchor="start">&#8226; &#8230;received.retry</text>
+<text x="628" y="790.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E293B" text-anchor="start">&#8226; &#8230;received.dlt</text>
+<text x="628" y="808.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E293B" text-anchor="start">&#8226; key = alert fingerprint</text>
+<text x="628" y="827.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#1E293B" text-anchor="start">&#8226; at-least-once delivery</text>
+<rect x="960" y="700" width="300" height="160" rx="11" fill="#FEE2E2" stroke="#B91C1C" stroke-width="1.8"/>
+<text x="1110" y="728" font-family="Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" font-style="normal" fill="#991B1B" text-anchor="middle">Redis &#8212; cache only</text>
+<text x="978" y="753.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#991B1B" text-anchor="start">&#8226; correlation cache (fingerprint &#8594; incidentId)</text>
+<text x="978" y="771.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#991B1B" text-anchor="start">&#8226; TTL = correlation window (15 min default)</text>
+<text x="978" y="790.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#991B1B" text-anchor="start">&#8226; rate-limit counters, per source</text>
+<text x="978" y="808.5" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#991B1B" text-anchor="start">&#8226; correlation: cache-aside, Postgres fallback</text>
+<text x="978" y="827.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" font-style="normal" fill="#991B1B" text-anchor="start">&#8226; rate-limit: fails open if Redis is down</text>
+<path d="M250,590 L250,700" fill="none" stroke="#0F766E" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="259" y="638.5" width="80.48" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="262" y="648" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="start">JDBC, same txn</text>
+<path d="M450,590 L650,700" fill="none" stroke="#0F766E" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="511.76" y="600.5" width="80.48" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="552" y="610" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">outbox publish</text>
+<path d="M630,590 L630,665 L1030,665 L1030,700" fill="none" stroke="#0F766E" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="784.44" y="648.5" width="91.12" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="830" y="658" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">rate-limit check</text>
+<path d="M750,700 L850,590" fill="none" stroke="#4338CA" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="855" y="602.5" width="43.24" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="858" y="612" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="start">consume</text>
+<path d="M950,590 L850,700" fill="none" stroke="#4338CA" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="955" y="624.5" width="64.52000000000001" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="958" y="634" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="start">retry / DLT</text>
+<path d="M1150,590 L1170,700" fill="none" stroke="#4338CA" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="1152" y="605.5" width="101.76" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="1155" y="615" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="start">correlation lookup</text>
+<path d="M800,590 L800,645 L450,645 L450,700" fill="none" stroke="#4338CA" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="592.08" y="650.5" width="69.84" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="627" y="660" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">read / write</text>
+<rect x="300" y="900" width="330" height="100" rx="11" fill="#DCFCE7" stroke="#15803D" stroke-width="1.8"/>
+<text x="465" y="928" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" font-style="normal" fill="#14532D" text-anchor="middle">Prometheus</text>
+<text x="465" y="947" font-family="Helvetica, Arial, sans-serif" font-size="10.6" font-weight="normal" font-style="normal" fill="#14532D" text-anchor="middle">scrapes /actuator/prometheus</text>
+<text x="465" y="963" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#14532D" text-anchor="middle">from incidentflow-api &amp; incidentflow-worker</text>
+<rect x="660" y="900" width="330" height="100" rx="11" fill="#DCFCE7" stroke="#166534" stroke-width="1.8"/>
+<text x="825" y="928" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" font-style="normal" fill="#14532D" text-anchor="middle">Grafana 13.0.5</text>
+<text x="825" y="947" font-family="Helvetica, Arial, sans-serif" font-size="10.6" font-weight="normal" font-style="normal" fill="#14532D" text-anchor="middle">8-panel dashboard</text>
+<text x="825" y="963" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#14532D" text-anchor="middle">reads from Prometheus</text>
+<path d="M410,590 L410,682 L580,682" fill="none" stroke="#15803D" stroke-width="1.8" stroke-dasharray="3,3" marker-end="none"/>
+<path d="M1020,590 L1020,682 L580,682" fill="none" stroke="#15803D" stroke-width="1.8" stroke-dasharray="3,3" marker-end="none"/>
+<path d="M580,682 L580,900" fill="none" stroke="#15803D" stroke-width="1.8" stroke-dasharray="3,3" marker-end="url(#arrow)"/>
+<rect x="292" y="667.5" width="80.48" height="13.5" fill="#FFFFFF" opacity="0.92"/>
+<text x="295" y="677" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="normal" fill="#15803D" text-anchor="start">metrics scrape</text>
+<path d="M630,928 L658,928" fill="none" stroke="#15803D" stroke-width="1.8" marker-end="url(#arrow)"/>
+<rect x="560" y="1075" width="480" height="92" rx="11" fill="#1E293B" stroke="#FF9900" stroke-width="2"/>
+<text x="800" y="1093" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="normal" font-style="italic" fill="#94A3B8" text-anchor="middle">outside the Docker Compose network &#8212; AWS-managed</text>
+<text x="800" y="1115" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" font-style="normal" fill="#FF9900" text-anchor="middle">AWS CloudWatch Logs</text>
+<text x="800" y="1135" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="normal" font-style="normal" fill="#E2E8F0" text-anchor="middle">/incidentflow/api &#183; /incidentflow/worker &#183; /incidentflow/nginx &#8212; 14-day retention</text>
+<path d="M520,258 L90,258 L90,1060 L578,1075" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#arrowlight)"/>
+<path d="M170,470 L90,470 L90,1060" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="4,4" marker-end="none"/>
+<path d="M1260,470 L1310,470 L1310,1060 L1022,1075" fill="none" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="4,4" marker-end="url(#arrowlight)"/>
+</svg>

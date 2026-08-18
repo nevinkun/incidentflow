@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1560 1456" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="1560" height="1456" fill="#FFFFFF"/>
+<defs>
+<marker id="arr_call" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arr_return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+</defs>
+<text x="780.0" y="34" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A" text-anchor="middle">IncidentFlow &#8212; Successful Alert Processing</text>
+<text x="780.0" y="56" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#64748B" text-anchor="middle">One alert, no correlation match, no failures &#8212; the full happy path from submission to committed incident</text>
+<line x1="130.0" y1="146" x2="130.0" y2="1386" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="390.0" y1="146" x2="390.0" y2="1386" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="650.0" y1="146" x2="650.0" y2="1386" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="910.0" y1="146" x2="910.0" y2="1386" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="1170.0" y1="146" x2="1170.0" y2="1386" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="1430.0" y1="146" x2="1430.0" y2="1386" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<path d="M130.0,180 L390.0,180" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="202.1375" y="162.5" width="115.72500000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="260.0" y="173" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#475569" text-anchor="middle">POST /api/v1/alerts</text>
+<path d="M390.0,224 L650.0,224" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="384.17499999999995" y="206.5" width="271.65000000000003" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="520.0" y="217" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">INCR rate-limit:{source} &#8212; checked first</text>
+<path d="M650.0,268 L390.0,268" fill="none" stroke="#B91C1C" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="482.35" y="250.5" width="75.30000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="520.0" y="261" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#B91C1C" text-anchor="middle">within limit</text>
+<path d="M390.0,312 C 436.0,308 436.0,334 390.0,330" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<text x="444.0" y="320" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="start">check externalEventId &#8212; not a duplicate</text>
+<path d="M390.0,362 C 436.0,358 436.0,384 390.0,380" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<text x="444.0" y="370" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="start">compute fingerprint = SHA-256(service|alertType|resourceId)</text>
+<path d="M390.0,412 L910.0,412" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="571.925" y="394.5" width="156.15" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="650.0" y="405" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">INSERT Alert + OutboxEvent</text>
+<rect x="300.0" y="456" width="700.0" height="33" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="650.0" y="474" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">same PostgreSQL transaction &#8212; both rows commit together or not at all</text>
+<path d="M910.0,513 L390.0,513" fill="none" stroke="#1E40AF" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="621.0125" y="495.5" width="57.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="650.0" y="506" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#1E40AF" text-anchor="middle">commit ok</text>
+<path d="M390.0,557 L130.0,557" fill="none" stroke="#0F766E" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="222.35" y="539.5" width="75.30000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="260.0" y="550" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">202 Accepted</text>
+<rect x="60" y="607" width="1440" height="26" fill="#F1F5F9"/>
+<line x1="60" y1="607" x2="1500" y2="607" stroke="#475569" stroke-width="1.2"/>
+<line x1="60" y1="633" x2="1500" y2="633" stroke="#475569" stroke-width="1.2"/>
+<text x="780.0" y="625" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">moments later &#8212; outbox publisher (scheduled job, same incidentflow-api process)</text>
+<path d="M390.0,647 L910.0,647" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="505.5125" y="629.5" width="288.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="650.0" y="640" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">SELECT unpublished &#8230; FOR UPDATE SKIP LOCKED</text>
+<path d="M390.0,691 L1170.0,691" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="641.2875" y="673.5" width="277.425" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="780.0" y="684" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">publish(topic=alerts.received, key=fingerprint)</text>
+<path d="M1170.0,735 L390.0,735" fill="none" stroke="#334155" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="748.125" y="717.5" width="63.75000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="780.0" y="728" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">broker ack</text>
+<path d="M390.0,779 L910.0,779" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="548.825" y="761.5" width="202.35000000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="650.0" y="772" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">UPDATE OutboxEvent SET publishedAt</text>
+<rect x="60" y="829" width="1440" height="26" fill="#F1F5F9"/>
+<line x1="60" y1="829" x2="1500" y2="829" stroke="#475569" stroke-width="1.2"/>
+<line x1="60" y1="855" x2="1500" y2="855" stroke="#475569" stroke-width="1.2"/>
+<text x="780.0" y="847" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">incidentflow-worker consumes</text>
+<path d="M1170.0,869 L1430.0,869" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1259.4625" y="851.5" width="81.075" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1300.0" y="862" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">deliver event</text>
+<path d="M1430.0,913 L910.0,913" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1077.4875" y="895.5" width="185.025" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1170.0" y="906" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">ProcessedEvent(eventId) exists?</text>
+<path d="M910.0,957 L1430.0,957" fill="none" stroke="#1E40AF" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="1091.925" y="939.5" width="156.15" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1170.0" y="950" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#1E40AF" text-anchor="middle">not found &#8212; continue</text>
+<path d="M1430.0,1001 L650.0,1001" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="953.2625" y="983.5" width="173.47500000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1040.0" y="994" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">GET correlation:{fingerprint}</text>
+<path d="M650.0,1045 L1430.0,1045" fill="none" stroke="#B91C1C" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="1008.125" y="1027.5" width="63.75000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1040.0" y="1038" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#B91C1C" text-anchor="middle">cache miss</text>
+<path d="M1430.0,1089 L910.0,1089" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="973.5375" y="1071.5" width="392.925" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1170.0" y="1082" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">no active incident &#8594; INSERT Incident + Timeline + assign team</text>
+<path d="M1430.0,1133 L650.0,1133" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="895.5125" y="1115.5" width="288.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1040.0" y="1126" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">SET correlation:{fingerprint}=incidentId, TTL 15m</text>
+<path d="M1430.0,1177 L910.0,1177" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="999.525" y="1159.5" width="340.95000000000005" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1170.0" y="1170" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">UPDATE Alert SET status=PROCESSED, incidentId, processedAt</text>
+<path d="M1430.0,1221 L910.0,1221" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="959.1" y="1203.5" width="421.8" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1170.0" y="1214" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">INSERT ProcessedEvent(eventId) &#8212; last write, marks this event done</text>
+<rect x="820.0" y="1265" width="700.0" height="33" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="1170.0" y="1283" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">all of the above run in one @Transactional method &#8212; if anything throws, none of it commits</text>
+<path d="M1430.0,1322 L1170.0,1322" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1259.4625" y="1304.5" width="81.075" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1300.0" y="1315" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">commit offset</text>
+<rect x="35.0" y="100" width="190" height="46" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="1.8"/>
+<text x="130.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#475569" text-anchor="middle">Browser</text>
+<text x="130.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#475569" text-anchor="middle">React console</text>
+<rect x="295.0" y="100" width="190" height="46" rx="8" fill="#CCFBF1" stroke="#0F766E" stroke-width="1.8"/>
+<text x="390.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#0F766E" text-anchor="middle">incidentflow-api</text>
+<text x="390.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#0F766E" text-anchor="middle">profile=api</text>
+<rect x="555.0" y="100" width="190" height="46" rx="8" fill="#FEE2E2" stroke="#B91C1C" stroke-width="1.8"/>
+<text x="650.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#B91C1C" text-anchor="middle">Redis</text>
+<text x="650.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#B91C1C" text-anchor="middle">cache only</text>
+<rect x="815.0" y="100" width="190" height="46" rx="8" fill="#DBEAFE" stroke="#1E40AF" stroke-width="1.8"/>
+<text x="910.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1E40AF" text-anchor="middle">PostgreSQL</text>
+<text x="910.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#1E40AF" text-anchor="middle">source of truth</text>
+<rect x="1075.0" y="100" width="190" height="46" rx="8" fill="#E2E8F0" stroke="#334155" stroke-width="1.8"/>
+<text x="1170.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#334155" text-anchor="middle">Kafka</text>
+<text x="1170.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#334155" text-anchor="middle">KRaft mode</text>
+<rect x="1335.0" y="100" width="190" height="46" rx="8" fill="#E0E7FF" stroke="#4338CA" stroke-width="1.8"/>
+<text x="1430.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#4338CA" text-anchor="middle">incidentflow-worker</text>
+<text x="1430.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#4338CA" text-anchor="middle">profile=worker</text>
+</svg>

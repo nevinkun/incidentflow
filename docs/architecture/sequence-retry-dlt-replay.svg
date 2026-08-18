@@ -1,0 +1,129 @@
+<svg viewBox="0 0 1560 1822" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="1560" height="1822" fill="#FFFFFF"/>
+<defs>
+<marker id="arr_call" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+<marker id="arr_return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+</defs>
+<text x="780.0" y="34" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#0F172A" text-anchor="middle">IncidentFlow &#8212; Retry, Dead-Letter, and Replay</text>
+<text x="780.0" y="56" font-family="Helvetica, Arial, sans-serif" font-size="12.5" fill="#64748B" text-anchor="middle">Exponential-backoff retries recover from transient failures &#8212; permanent failures dead-letter and wait for an operator-triggered replay</text>
+<line x1="140.0" y1="146" x2="140.0" y2="1752" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="460.0" y1="146" x2="460.0" y2="1752" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="780.0" y1="146" x2="780.0" y2="1752" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="1100.0" y1="146" x2="1100.0" y2="1752" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<line x1="1420.0" y1="146" x2="1420.0" y2="1752" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="3,3"/>
+<rect x="70" y="186" width="1420" height="26" fill="#F1F5F9"/>
+<line x1="70" y1="186" x2="1490" y2="186" stroke="#475569" stroke-width="1.2"/>
+<line x1="70" y1="212" x2="1490" y2="212" stroke="#475569" stroke-width="1.2"/>
+<text x="780.0" y="204" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">transient failure &#8212; retries, then succeeds</text>
+<path d="M1100.0,226 L1420.0,226" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1115.5125" y="208.5" width="288.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="219" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">deliver alert event (failureSimulation=TRANSIENT)</text>
+<path d="M1420.0,268 L780.0,268" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="972.8375" y="250.5" width="254.32500000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1100.0" y="261" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">attempt processing &#8212; throws exception</text>
+<rect x="690.0" y="310" width="820.0" height="33" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="1100.0" y="328" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">simulated transient failure &#8212; or a real brief DB / network hiccup</text>
+<path d="M1420.0,367 C 1374.0,363 1374.0,389 1420.0,385" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<text x="1366.0" y="375" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="end">classify as TRANSIENT</text>
+<path d="M1420.0,415 L1100.0,415" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1138.6125" y="397.5" width="242.775" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="408" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">publish to retry topic &#8212; backoff 1s</text>
+<rect x="1010.0" y="457" width="500.0" height="33" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="1260.0" y="475" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">&#8942; backoff &#8776; 1s &#8942;</text>
+<path d="M1100.0,514 L1420.0,514" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1196.3625" y="496.5" width="127.275" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="507" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">redeliver (attempt 2)</text>
+<path d="M1420.0,556 L780.0,556" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="987.275" y="538.5" width="225.45000000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1100.0" y="549" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">attempt processing &#8212; fails again</text>
+<path d="M1420.0,598 L1100.0,598" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1138.6125" y="580.5" width="242.775" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="591" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">publish to retry topic &#8212; backoff 3s</text>
+<rect x="1010.0" y="640" width="500.0" height="33" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="1260.0" y="658" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">&#8942; backoff &#8776; 3s &#8942;</text>
+<path d="M1100.0,697 L1420.0,697" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1196.3625" y="679.5" width="127.275" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="690" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">redeliver (attempt 3)</text>
+<path d="M1420.0,739 L780.0,739" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="926.6375" y="721.5" width="346.725" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1100.0" y="732" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">processing succeeds &#8212; create/update incident normally</text>
+<path d="M1420.0,781 L1100.0,781" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1219.4625" y="763.5" width="81.075" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="774" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">commit offset</text>
+<rect x="70" y="829" width="1420" height="26" fill="#F1F5F9"/>
+<line x1="70" y1="829" x2="1490" y2="829" stroke="#475569" stroke-width="1.2"/>
+<line x1="70" y1="855" x2="1490" y2="855" stroke="#475569" stroke-width="1.2"/>
+<text x="780.0" y="847" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">permanent failure &#8212; retries exhausted, reaches the dead-letter topic</text>
+<path d="M1100.0,869 L1420.0,869" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1115.5125" y="851.5" width="288.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="862" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">deliver alert event (failureSimulation=PERMANENT)</text>
+<path d="M1420.0,911 L780.0,911" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1004.6" y="893.5" width="190.8" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1100.0" y="904" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">attempt processing &#8212; fails</text>
+<rect x="690.0" y="953" width="820.0" height="33" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="1100.0" y="971" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">classified PERMANENT &#8212; malformed payload, missing field, or explicitly simulated</text>
+<path d="M1420.0,1010 L1100.0,1010" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1132.8375" y="992.5" width="254.32500000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="1003" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">publish to incidentflow.alerts.received.dlt</text>
+<path d="M1420.0,1052 L780.0,1052" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="828.4625" y="1034.5" width="543.075" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1100.0" y="1045" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">INSERT FailureRecord(originalEventId, originalTopic, exceptionType, errorMessage, retryCount)</text>
+<path d="M1420.0,1094 L1100.0,1094" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1086.6375" y="1076.5" width="346.725" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="1087" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">commit offset &#8212; handling for this message is complete</text>
+<rect x="70" y="1142" width="1420" height="26" fill="#F1F5F9"/>
+<line x1="70" y1="1142" x2="1490" y2="1142" stroke="#475569" stroke-width="1.2"/>
+<line x1="70" y1="1168" x2="1490" y2="1168" stroke="#475569" stroke-width="1.2"/>
+<text x="780.0" y="1160" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="700" font-style="normal" fill="#475569" text-anchor="middle">operator inspects and replays</text>
+<path d="M140.0,1182 L460.0,1182" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="239.25" y="1164.5" width="121.50000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="300.0" y="1175" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#475569" text-anchor="middle">GET /api/v1/failures</text>
+<path d="M460.0,1224 L140.0,1224" fill="none" stroke="#0F766E" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="233.475" y="1206.5" width="133.05" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="300.0" y="1217" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">list of FailureRecords</text>
+<path d="M140.0,1266 L460.0,1266" fill="none" stroke="#475569" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="201.71249999999998" y="1248.5" width="196.57500000000002" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="300.0" y="1259" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#475569" text-anchor="middle">POST /api/v1/failures/{id}/replay</text>
+<path d="M460.0,1308 L780.0,1308" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="475.5125" y="1290.5" width="288.975" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="620.0" y="1301" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">read FailureRecord &#8594; INSERT new OutboxEvent</text>
+<rect x="370.0" y="1350" width="500.0" height="48" rx="6" fill="#FEF9C3" stroke="#CA8A04" stroke-width="1.3"/>
+<text x="620.0" y="1368" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">replay creates a new outbox event &#8212; it never calls worker logic directly</text>
+<text x="620.0" y="1383" font-family="Helvetica, Arial, sans-serif" font-size="9.8" font-weight="normal" font-style="normal" fill="#713F12" text-anchor="middle">the replayed payload has failureSimulation cleared to NONE, so it won't fail the same way again</text>
+<path d="M460.0,1422 L780.0,1422" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="472.625" y="1404.5" width="294.75" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="620.0" y="1415" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">UPDATE FailureRecord SET replayedAt, replayEventId</text>
+<path d="M460.0,1464 L140.0,1464" fill="none" stroke="#0F766E" stroke-width="1.7" stroke-dasharray="5,4" marker-end="url(#arr_return)"/>
+<rect x="279.675" y="1446.5" width="40.650000000000006" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="300.0" y="1457" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">200 OK</text>
+<path d="M460.0,1506 C 506.0,1502 506.0,1528 460.0,1524" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<text x="514.0" y="1514" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="start">outbox publisher picks up the new event</text>
+<text x="514.0" y="1528" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="normal" font-style="italic" fill="#94A3B8" text-anchor="start">same scheduled poll as any normal alert</text>
+<path d="M460.0,1564 L1100.0,1564" fill="none" stroke="#0F766E" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="719.25" y="1546.5" width="121.50000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="780.0" y="1557" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#0F766E" text-anchor="middle">publish replay event</text>
+<path d="M1100.0,1606 L1420.0,1606" fill="none" stroke="#334155" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1199.25" y="1588.5" width="121.50000000000001" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="1599" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#334155" text-anchor="middle">deliver replay event</text>
+<path d="M1420.0,1648 L780.0,1648" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="946.85" y="1630.5" width="306.3" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1100.0" y="1641" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">processing succeeds &#8212; incident created/updated</text>
+<path d="M1420.0,1690 L1100.0,1690" fill="none" stroke="#4338CA" stroke-width="1.7" marker-end="url(#arr_call)"/>
+<rect x="1219.4625" y="1672.5" width="81.075" height="14.5" fill="#FFFFFF" opacity="0.94"/>
+<text x="1260.0" y="1683" font-family="Helvetica, Arial, sans-serif" font-size="10.5" font-weight="normal" font-style="normal" fill="#4338CA" text-anchor="middle">commit offset</text>
+<rect x="45.0" y="100" width="190" height="46" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="1.8"/>
+<text x="140.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#475569" text-anchor="middle">Operator</text>
+<text x="140.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#475569" text-anchor="middle">React console</text>
+<rect x="365.0" y="100" width="190" height="46" rx="8" fill="#CCFBF1" stroke="#0F766E" stroke-width="1.8"/>
+<text x="460.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#0F766E" text-anchor="middle">incidentflow-api</text>
+<text x="460.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#0F766E" text-anchor="middle">profile=api</text>
+<rect x="685.0" y="100" width="190" height="46" rx="8" fill="#DBEAFE" stroke="#1E40AF" stroke-width="1.8"/>
+<text x="780.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1E40AF" text-anchor="middle">PostgreSQL</text>
+<text x="780.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#1E40AF" text-anchor="middle">source of truth</text>
+<rect x="1005.0" y="100" width="190" height="46" rx="8" fill="#E2E8F0" stroke="#334155" stroke-width="1.8"/>
+<text x="1100.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#334155" text-anchor="middle">Kafka</text>
+<text x="1100.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#334155" text-anchor="middle">KRaft mode</text>
+<rect x="1325.0" y="100" width="190" height="46" rx="8" fill="#E0E7FF" stroke="#4338CA" stroke-width="1.8"/>
+<text x="1420.0" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#4338CA" text-anchor="middle">incidentflow-worker</text>
+<text x="1420.0" y="136" font-family="Helvetica, Arial, sans-serif" font-size="9.3" font-style="italic" fill="#4338CA" text-anchor="middle">profile=worker</text>
+</svg>
